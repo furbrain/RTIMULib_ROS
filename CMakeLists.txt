@@ -13,6 +13,8 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
 )
 
+
+
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
@@ -68,10 +70,11 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
+#generate_messages(
 #   DEPENDENCIES
-#   sensor_msgs#   std_msgs
-# )
+#   sensor_msgs
+#   std_msgs
+#)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -118,7 +121,10 @@ catkin_package(
 include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
+  src/RTIMULib
 )
+
+add_subdirectory(src/RTIMULib)
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
@@ -134,6 +140,14 @@ include_directories(
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
 # add_executable(${PROJECT_NAME}_node src/ros_rtimu_lib_node.cpp)
+
+add_executable(imu src/imu.cpp)
+target_link_libraries(imu ${catkin_LIBRARIES} RTIMULib)
+add_dependencies(imu RTIMULib)
+
+#add_executable(variance src/variance.cpp)
+#target_link_libraries(variance ${catkin_LIBRARIES})
+#add_dependencies(listener beginner_tutorials_generate_messages_cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
