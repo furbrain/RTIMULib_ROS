@@ -95,6 +95,13 @@ int main(int argc, char **argv)
             imu_msg.angular_velocity.x = imuData.gyro.x();
             imu_msg.angular_velocity.y = imuData.gyro.y();
             imu_msg.angular_velocity.z = imuData.gyro.z();
+            if (settings->m_fusionType != 0) {
+                imu_msg.orientation.w = imuData.fusionQPose.scalar();
+                imu_msg.orientation.x = imuData.fusionQPose.x();
+                imu_msg.orientation.y = imuData.fusionQPose.y();
+                imu_msg.orientation.z = imuData.fusionQPose.scalar();
+
+            }
             imu_pub.publish(imu_msg);
 
             sensor_msgs::MagneticField mag_msg;

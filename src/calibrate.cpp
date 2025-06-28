@@ -26,6 +26,8 @@
 #include "RTIMUMagCal.h"
 #include "RTIMUAccelCal.h"
 
+#include "ros/ros.h"
+
 #include <termios.h>
 #include <unistd.h>
 #include <ctype.h>
@@ -64,15 +66,32 @@ static int accelCurrentAxis;
 int main(int argc, char **argv)
 {
     char *settingsFile;
+    ros::NodeHandle nh;
 
     if (argc == 2)
         settingsFile = argv[1];
     else
         settingsFile = (char *)"RTIMULib";
+    std::string settings_dir;
+    std::string imu_frame = "imu";
+    std::string mag_frame;
+    if (!nh.getParam("settings_dir", settings_dir)){
+        if (const char* home = std::getenv("ROS_HOME")) {
+            settings_dir = home;
+        } else if (const char* home = std::getenv("HOME")) {
+            settings_dir = home; 
+            settings_dir += "/.ros";
+        }
+    }
+    nh.getParam("imu_frame", imu_frame); 
+    if (!nh.getParam("mag_frame", mag_frame)) {
+        mag_frame = imu_frame;
+    }
+     
+
 
     printf("RTIMULibCal - using %s.ini\n", settingsFile);
-
-    settings = new RTIMUSettings(settingsFile);
+    RTIMUSettings *settings = new RTIMUSettings(settings_dir.c_str(), "RTIMULib");
 
     bool mustExit = false;
     imu = NULL;
