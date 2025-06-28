@@ -83,9 +83,8 @@ int main(int argc, char **argv)
 
         while (imu->IMURead()) {
             RTIMU_DATA imuData = imu->getIMUData();
-            auto imu_ts = imuData.timestamp;
-
-            ros::Time ts(imu_ts / 1000000, imu_ts % 1000000);
+            uint64_t usec = imuData.timestamp;
+            ros::Time ts = ros::Time().fromNSec(usec * 1000);
 
             sensor_msgs::Imu imu_msg;
             imu_msg.header.frame_id = imu_frame;
