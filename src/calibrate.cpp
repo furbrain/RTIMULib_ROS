@@ -66,6 +66,7 @@ static int accelCurrentAxis;
 int main(int argc, char **argv)
 {
     char *settingsFile;
+    ros::init(argc, argv, "imu_calibrator");
     ros::NodeHandle nh;
 
     if (argc == 2)
